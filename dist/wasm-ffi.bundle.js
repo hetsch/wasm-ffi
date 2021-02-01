@@ -1512,11 +1512,11 @@ class Wrapper {
   }
 
   __allocate(size) {
-    Object(__WEBPACK_IMPORTED_MODULE_2__misc__["c" /* assert */])(!!this.exports.allocate && !!this.exports.deallocate,
-      "Missing allocate/deallocate fns in wasm exports, can't allocate memory");
+    Object(__WEBPACK_IMPORTED_MODULE_2__misc__["c" /* assert */])(!!this.exports.malloc && !!this.exports.free,
+      "Missing malloc/free fns in wasm exports, can't allocate memory");
 
-    const ptr = this.exports.allocate(size);
-    Object(__WEBPACK_IMPORTED_MODULE_2__misc__["c" /* assert */])(!!ptr, 'allocate failed');
+    const ptr = this.exports.malloc(size);
+    Object(__WEBPACK_IMPORTED_MODULE_2__misc__["c" /* assert */])(!!ptr, 'malloc failed');
 
     if (this[DATA].debug) console.log('Alloc: %s (size=%s)', ptr, size);
     this[DATA].allocations.set(ptr, size);
@@ -1528,7 +1528,7 @@ class Wrapper {
     const size = optSize || this[DATA].allocations.get(ptr);
     if (this[DATA].debug) console.log('Free: %s (size=%s)', ptr, size);
 
-    this.exports.deallocate(ptr, size);
+    this.exports.free(ptr, size);
     this[DATA].allocations.delete(ptr);
   }
 

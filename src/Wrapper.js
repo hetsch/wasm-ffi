@@ -300,11 +300,11 @@ class Wrapper {
   }
 
   __allocate(size) {
-    assert(!!this.exports.allocate && !!this.exports.deallocate,
-      "Missing allocate/deallocate fns in wasm exports, can't allocate memory");
+    assert(!!this.exports.malloc && !!this.exports.free,
+      "Missing malloc/free fns in wasm exports, can't allocate memory");
 
-    const ptr = this.exports.allocate(size);
-    assert(!!ptr, 'allocate failed');
+    const ptr = this.exports.malloc(size);
+    assert(!!ptr, 'malloc failed');
 
     if (this[DATA].debug) console.log('Alloc: %s (size=%s)', ptr, size);
     this[DATA].allocations.set(ptr, size);
@@ -316,7 +316,7 @@ class Wrapper {
     const size = optSize || this[DATA].allocations.get(ptr);
     if (this[DATA].debug) console.log('Free: %s (size=%s)', ptr, size);
 
-    this.exports.deallocate(ptr, size);
+    this.exports.free(ptr, size);
     this[DATA].allocations.delete(ptr);
   }
 
